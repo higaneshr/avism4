@@ -136,6 +136,108 @@ const Index = () => {
     }
   };
 
+  // Sound effects for buttons
+  const playClickSound = () => {
+    try {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      oscillator.frequency.value = 600;
+      oscillator.type = "sine";
+
+      gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.1);
+    } catch (error) {
+      console.log("Audio not supported");
+    }
+  };
+
+  const playHoverSound = () => {
+    try {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      oscillator.frequency.value = 400;
+      oscillator.type = "sine";
+
+      gainNode.gain.setValueAtTime(0.08, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.08);
+
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.08);
+    } catch (error) {
+      console.log("Audio not supported");
+    }
+  };
+
+  const playSuccessSound = () => {
+    try {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      oscillator.frequency.value = 523.25; // C5
+      oscillator.type = "sine";
+
+      gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.2);
+
+      // Second tone
+      setTimeout(() => {
+        const osc2 = audioContext.createOscillator();
+        const gain2 = audioContext.createGain();
+        osc2.connect(gain2);
+        gain2.connect(audioContext.destination);
+        osc2.frequency.value = 659.25; // E5
+        osc2.type = "sine";
+        gain2.gain.setValueAtTime(0.2, audioContext.currentTime);
+        gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+        osc2.start(audioContext.currentTime);
+        osc2.stop(audioContext.currentTime + 0.2);
+      }, 100);
+    } catch (error) {
+      console.log("Audio not supported");
+    }
+  };
+
+  // Scroll reveal animation
+  useEffect(() => {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+        }
+      });
+    }, observerOptions);
+
+    const elements = document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right');
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -179,8 +281,9 @@ const Index = () => {
               {["Home", "Camera", "Features", "Emergency", "Team", "About"].map((item) => (
                 <button
                   key={item}
-                  onClick={() => scrollToSection(item.toLowerCase())}
-                  className="text-sm hover:text-primary transition-colors"
+                  onClick={() => { playClickSound(); scrollToSection(item.toLowerCase()); }}
+                  onMouseEnter={playHoverSound}
+                  className="text-sm hover:text-primary transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left"
                 >
                   {item}
                 </button>
@@ -236,11 +339,22 @@ const Index = () => {
           </div>
 
           <div className="flex flex-wrap gap-4 justify-center">
-            <Button size="lg" onClick={() => scrollToSection("camera")} className="glow-teal">
+            <Button 
+              size="lg" 
+              onClick={() => { playClickSound(); scrollToSection("camera"); }} 
+              onMouseEnter={playHoverSound}
+              className="glow-teal btn-hover-lift ripple"
+            >
               <Camera className="mr-2 h-5 w-5" />
               Open Camera Panel
             </Button>
-            <Button size="lg" variant="secondary" onClick={() => scrollToSection("features")} className="glow-orange">
+            <Button 
+              size="lg" 
+              variant="secondary" 
+              onClick={() => { playClickSound(); scrollToSection("features"); }}
+              onMouseEnter={playHoverSound}
+              className="glow-orange btn-hover-lift ripple"
+            >
               <Target className="mr-2 h-5 w-5" />
               View Features
             </Button>
@@ -251,13 +365,13 @@ const Index = () => {
       {/* Camera Section */}
       <section id="camera" className="py-20 px-4 bg-muted/30">
         <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-12 animate-fade-in">
+          <div className="text-center mb-12 scroll-reveal">
             <Camera className="w-12 h-12 text-primary mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Connect to IP Camera</h2>
             <p className="text-muted-foreground">Access your ESP32-CAM live feed</p>
           </div>
 
-          <Card className="p-6 md:p-8 glow-teal animate-fade-in">
+          <Card className="p-6 md:p-8 glow-teal scroll-reveal">
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <h3 className="text-xl font-semibold">Camera Connection</h3>
@@ -282,7 +396,13 @@ const Index = () => {
                   </p>
                 </div>
 
-                <Button onClick={handleCameraConnect} className="w-full glow-teal" size="lg" disabled={connectionStatus === "connecting"}>
+                <Button 
+                  onClick={() => { playSuccessSound(); handleCameraConnect(); }} 
+                  onMouseEnter={playHoverSound}
+                  className="w-full glow-teal btn-hover-lift btn-pulse-on-hover ripple" 
+                  size="lg" 
+                  disabled={connectionStatus === "connecting"}
+                >
                   <Radio className="mr-2 h-5 w-5" />
                   {connectionStatus === "connecting" ? "Connecting..." : "Connect Camera"}
                 </Button>
@@ -314,7 +434,7 @@ const Index = () => {
       {/* Features Section */}
       <section id="features" className="py-20 px-4">
         <div className="container mx-auto">
-          <div className="text-center mb-12 animate-fade-in">
+          <div className="text-center mb-12 scroll-reveal">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">AVIS-M4 Highlights</h2>
             <p className="text-muted-foreground">Advanced features for maximum safety</p>
           </div>
@@ -354,8 +474,9 @@ const Index = () => {
             ].map((feature, index) => (
               <Card
                 key={index}
-                className="p-6 hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 animate-fade-in cursor-pointer"
+                className="p-6 hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 scroll-reveal cursor-pointer"
                 style={{ animationDelay: `${index * 100}ms` }}
+                onMouseEnter={playHoverSound}
               >
                 <div className="text-primary mb-4">{feature.icon}</div>
                 <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
@@ -369,7 +490,7 @@ const Index = () => {
       {/* How It Works */}
       <section className="py-20 px-4 bg-muted/30">
         <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-12 animate-fade-in">
+          <div className="text-center mb-12 scroll-reveal">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
             <p className="text-muted-foreground">Simple 4-step process for maximum safety</p>
           </div>
@@ -397,8 +518,11 @@ const Index = () => {
                 description: "Buzzer, display, and app notifications immediately warn the user of any dangers detected.",
               },
             ].map((item, index) => (
-              <div key={index} className="relative animate-fade-in" style={{ animationDelay: `${index * 150}ms` }}>
-                <Card className="p-6 h-full hover:scale-105 transition-all duration-300">
+              <div key={index} className="relative scroll-reveal" style={{ animationDelay: `${index * 150}ms` }}>
+                <Card 
+                  className="p-6 h-full hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 cursor-pointer"
+                  onMouseEnter={playHoverSound}
+                >
                   <div className="text-5xl font-bold text-primary/20 mb-4">{item.step}</div>
                   <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
                   <p className="text-sm text-muted-foreground">{item.description}</p>
@@ -413,7 +537,7 @@ const Index = () => {
       {/* Emergency Actions */}
       <section id="emergency" className="py-20 px-4">
         <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-12 animate-fade-in">
+          <div className="text-center mb-12 scroll-reveal">
             <AlertTriangle className="w-12 h-12 text-secondary mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Emergency Control</h2>
             <p className="text-muted-foreground">Quick access to emergency services</p>
@@ -421,19 +545,40 @@ const Index = () => {
 
           <div className="space-y-6">
             <div className="grid md:grid-cols-3 gap-4">
-              <Button asChild size="lg" variant="destructive" className="h-20 text-lg">
+              <Button 
+                asChild 
+                size="lg" 
+                variant="destructive" 
+                className="h-20 text-lg btn-hover-lift ripple"
+                onMouseEnter={playHoverSound}
+                onClick={playClickSound}
+              >
                 <a href="tel:108">
                   <Phone className="mr-2 h-6 w-6" />
                   Call Ambulance
                 </a>
               </Button>
-              <Button asChild size="lg" variant="destructive" className="h-20 text-lg">
+              <Button 
+                asChild 
+                size="lg" 
+                variant="destructive" 
+                className="h-20 text-lg btn-hover-lift ripple"
+                onMouseEnter={playHoverSound}
+                onClick={playClickSound}
+              >
                 <a href="tel:100">
                   <Shield className="mr-2 h-6 w-6" />
                   Call Police
                 </a>
               </Button>
-              <Button asChild size="lg" variant="destructive" className="h-20 text-lg">
+              <Button 
+                asChild 
+                size="lg" 
+                variant="destructive" 
+                className="h-20 text-lg btn-hover-lift ripple"
+                onMouseEnter={playHoverSound}
+                onClick={playClickSound}
+              >
                 <a href="tel:101">
                   <Flame className="mr-2 h-6 w-6" />
                   Call Fire Service
@@ -442,7 +587,12 @@ const Index = () => {
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
-              <Button size="lg" onClick={triggerAlarmDemo} className="h-16 glow-orange">
+              <Button 
+                size="lg" 
+                onClick={() => { playClickSound(); triggerAlarmDemo(); }} 
+                onMouseEnter={playHoverSound}
+                className="h-16 glow-orange btn-hover-lift btn-pulse-on-hover ripple"
+              >
                 <AlertTriangle className="mr-2 h-5 w-5" />
                 Trigger Alarm (Demo)
               </Button>
@@ -450,11 +600,13 @@ const Index = () => {
                 size="lg"
                 variant="secondary"
                 onClick={() => {
+                  playClickSound();
                   toast.info("Safety Tips", {
                     description: "• Always check surroundings\n• Use sensors in crowded areas\n• Visually confirm when possible",
                   });
                 }}
-                className="h-16"
+                onMouseEnter={playHoverSound}
+                className="h-16 btn-hover-lift ripple"
               >
                 <HelpCircle className="mr-2 h-5 w-5" />
                 Show Safety Tips
@@ -471,13 +623,13 @@ const Index = () => {
       {/* Event Log */}
       <section className="py-20 px-4 bg-muted/30">
         <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-12 animate-fade-in">
+          <div className="text-center mb-12 scroll-reveal">
             <Clock className="w-12 h-12 text-primary mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-bold mb-4">AVIS-M4 Event Log (Demo)</h2>
             <p className="text-muted-foreground">Real-time system activity monitoring</p>
           </div>
 
-          <Card className="p-6 bg-card/50">
+          <Card className="p-6 bg-card/50 scroll-reveal">
             <div ref={logContainerRef} className="bg-muted rounded-lg p-4 font-mono text-sm max-h-96 overflow-y-auto space-y-1">
               {eventLogs.map((log, index) => (
                 <div
@@ -503,14 +655,14 @@ const Index = () => {
       {/* Team Section */}
       <section id="team" className="py-20 px-4">
         <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-12 animate-fade-in">
+          <div className="text-center mb-12 scroll-reveal">
             <Users className="w-12 h-12 text-primary mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Team AVIS-M4</h2>
             <p className="text-muted-foreground">Meet the creators behind the innovation</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <Card className="p-6 text-center hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-primary/20">
+            <Card className="p-6 text-center hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 scroll-reveal-left" onMouseEnter={playHoverSound}>
               <div className="w-20 h-20 bg-primary rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold text-primary-foreground">
                 G
               </div>
@@ -518,7 +670,7 @@ const Index = () => {
               <p className="text-muted-foreground">Hardware, coding, and system logic</p>
             </Card>
 
-            <Card className="p-6 text-center hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-primary/20">
+            <Card className="p-6 text-center hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 scroll-reveal-right" onMouseEnter={playHoverSound}>
               <div className="w-20 h-20 bg-secondary rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold text-secondary-foreground">
                 M
               </div>
@@ -527,7 +679,7 @@ const Index = () => {
             </Card>
           </div>
 
-          <Card className="p-6 text-center bg-card/50">
+          <Card className="p-6 text-center bg-card/50 scroll-reveal">
             <p className="text-lg mb-2">
               <strong>College:</strong> Carmel Composite PU College, Nanjangud
             </p>
@@ -541,11 +693,11 @@ const Index = () => {
       {/* About Section */}
       <section id="about" className="py-20 px-4 bg-muted/30">
         <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-12 animate-fade-in">
+          <div className="text-center mb-12 scroll-reveal">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">About Project</h2>
           </div>
 
-          <Card className="p-8">
+          <Card className="p-8 scroll-reveal">
             <div className="space-y-6 text-muted-foreground">
               <p className="text-lg leading-relaxed">
                 <strong className="text-foreground">AVIS-M4 (Autonomous Vehicle Intelligent System - Mark 4)</strong> is our fourth-generation prototype designed
@@ -576,17 +728,22 @@ const Index = () => {
 
       {/* Floating Help Button */}
       <button
-        onClick={() => setShowHelp(true)}
-        className="fixed bottom-6 right-6 w-14 h-14 bg-primary text-primary-foreground rounded-full shadow-lg hover:scale-110 transition-transform flex items-center justify-center glow-teal z-50"
+        onClick={() => { playClickSound(); setShowHelp(true); }}
+        onMouseEnter={playHoverSound}
+        className="fixed bottom-6 right-6 w-14 h-14 bg-primary text-primary-foreground rounded-full shadow-lg hover:scale-110 transition-transform flex items-center justify-center glow-teal z-50 btn-pulse-on-hover animate-bounce"
       >
         <HelpCircle className="w-6 h-6" />
       </button>
 
       {/* Help Modal */}
       {showHelp && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 animate-fade-in">
-          <Card className="max-w-2xl w-full p-6 relative">
-            <button onClick={() => setShowHelp(false)} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground">
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 animate-fade-in backdrop-blur-sm">
+          <Card className="max-w-2xl w-full p-6 relative animate-scale-in">
+            <button 
+              onClick={() => { playClickSound(); setShowHelp(false); }} 
+              onMouseEnter={playHoverSound}
+              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors hover:scale-110"
+            >
               <X className="w-6 h-6" />
             </button>
 
