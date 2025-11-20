@@ -108,4 +108,88 @@ All colors MUST be HSL.
   .status-green {
     @apply bg-accent animate-pulse;
   }
+
+  /* Animated Background Particles */
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.15;
+    animation: float-particle 20s infinite ease-in-out;
+  }
+
+  .particle-1 {
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, hsl(var(--primary)) 0%, transparent 70%);
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+    animation-duration: 25s;
+  }
+
+  .particle-2 {
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, hsl(var(--secondary)) 0%, transparent 70%);
+    top: 60%;
+    left: 80%;
+    animation-delay: 3s;
+    animation-duration: 30s;
+  }
+
+  .particle-3 {
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, hsl(var(--accent)) 0%, transparent 70%);
+    top: 30%;
+    right: 15%;
+    animation-delay: 5s;
+    animation-duration: 22s;
+  }
+
+  .particle-4 {
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, hsl(var(--primary)) 0%, transparent 70%);
+    bottom: 20%;
+    left: 20%;
+    animation-delay: 7s;
+    animation-duration: 28s;
+  }
+
+  .particle-5 {
+    width: 90px;
+    height: 90px;
+    background: radial-gradient(circle, hsl(var(--secondary)) 0%, transparent 70%);
+    top: 80%;
+    right: 30%;
+    animation-delay: 2s;
+    animation-duration: 26s;
+  }
+
+  .particle-6 {
+    width: 110px;
+    height: 110px;
+    background: radial-gradient(circle, hsl(var(--accent)) 0%, transparent 70%);
+    top: 45%;
+    left: 50%;
+    animation-delay: 9s;
+    animation-duration: 24s;
+  }
+
+  @keyframes float-particle {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    25% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    50% {
+      transform: translate(-20px, -80px) scale(0.9);
+    }
+    75% {
+      transform: translate(40px, -40px) scale(1.05);
+    }
+  }
 }

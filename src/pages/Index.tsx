@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
+import demoVideo from "@/assets/avis-demo.mp4";
 import {
   Camera,
   Shield,
@@ -197,6 +198,15 @@ const Index = () => {
           background: "linear-gradient(135deg, hsl(222, 47%, 5%) 0%, hsl(222, 40%, 8%) 50%, hsl(270, 40%, 10%) 100%)",
         }}
       >
+        {/* Animated Background Particles */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="particle particle-1" />
+          <div className="particle particle-2" />
+          <div className="particle particle-3" />
+          <div className="particle particle-4" />
+          <div className="particle particle-5" />
+          <div className="particle particle-6" />
+        </div>
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(circle at 2px 2px, hsl(174, 72%, 56%) 1px, transparent 0)", backgroundSize: "40px 40px" }}></div>
         </div>
@@ -209,6 +219,22 @@ const Index = () => {
           <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
             A student-built prototype that combines smart navigation, under-vehicle safety checks, and real-time detection to protect lives and prevent accidents.
           </p>
+          
+          {/* Demo Video */}
+          <div className="mb-8 max-w-4xl mx-auto">
+            <video 
+              className="w-full rounded-lg shadow-2xl glow-teal border border-primary/20"
+              controls
+              autoPlay
+              muted
+              loop
+              playsInline
+            >
+              <source src={demoVideo} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+
           <div className="flex flex-wrap gap-4 justify-center">
             <Button size="lg" onClick={() => scrollToSection("camera")} className="glow-teal">
               <Camera className="mr-2 h-5 w-5" />
