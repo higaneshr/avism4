@@ -278,7 +278,7 @@ const Index = () => {
               <h1 className="text-xl font-bold text-primary">AVIS-M4</h1>
             </div>
             <div className="hidden md:flex gap-6">
-              {["Home", "Camera", "Features", "Emergency", "Team", "About"].map((item) => (
+              {["Home", "Camera", "Features", "Emergency", "About"].map((item) => (
                 <button
                   key={item}
                   onClick={() => { playClickSound(); scrollToSection(item.toLowerCase()); }}
@@ -652,43 +652,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section id="team" className="py-20 px-4">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-12 scroll-reveal">
-            <Users className="w-12 h-12 text-primary mx-auto mb-4" />
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Team AVIS-M4</h2>
-            <p className="text-muted-foreground">Meet the creators behind the innovation</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <Card className="p-6 text-center hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 scroll-reveal-left" onMouseEnter={playHoverSound}>
-              <div className="w-20 h-20 bg-primary rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold text-primary-foreground">
-                G
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Ganesh</h3>
-              <p className="text-muted-foreground">Hardware, coding, and system logic</p>
-            </Card>
-
-            <Card className="p-6 text-center hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 scroll-reveal-right" onMouseEnter={playHoverSound}>
-              <div className="w-20 h-20 bg-secondary rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold text-secondary-foreground">
-                M
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Mohit</h3>
-              <p className="text-muted-foreground">Testing, wiring, and presentation</p>
-            </Card>
-          </div>
-
-          <Card className="p-6 text-center bg-card/50 scroll-reveal">
-            <p className="text-lg mb-2">
-              <strong>College:</strong> Carmel Composite PU College, Nanjangud
-            </p>
-            <p className="text-lg">
-              <strong>Class:</strong> 2nd PUC – PCMC
-            </p>
-          </Card>
-        </div>
-      </section>
 
       {/* About Section */}
       <section id="about" className="py-20 px-4 bg-muted/30">
@@ -722,7 +685,7 @@ const Index = () => {
       <footer className="py-8 px-4 border-t border-border">
         <div className="container mx-auto text-center">
           <p className="mb-2">© 2025 AVIS-M4 – Student Prototype for Science Exhibition</p>
-          <p className="text-sm text-muted-foreground">Designed by Ganesh & Mohit | Autonomous Vehicle Intelligent System (Mark 4)</p>
+          <p className="text-sm text-muted-foreground">Autonomous Vehicle Intelligent System (Mark 4)</p>
         </div>
       </footer>
 
